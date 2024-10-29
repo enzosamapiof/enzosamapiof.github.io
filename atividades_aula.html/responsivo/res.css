@@ -1,0 +1,46 @@
+@media (max-width: 550px) {
+    body {
+        flex-direction: column;
+    }
+
+    div {
+        box-sizing: border-box;
+        background-color: darkgrey;
+        width: 100%;
+        padding: 25px;
+        border: solid 1px black;
+        margin: 5px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    img {
+        width: 90%;
+    }
+}
+
+@media (min-width: 551px) {
+
+    body {
+        display: flex;
+    }
+
+    div {
+        box-sizing: border-box;
+        background-color: darkgrey;
+        width: 100%;
+        padding: 25px;
+        border: solid 1px black;
+        margin: 5px;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    img {
+        width: 90%;
+    }
+}
