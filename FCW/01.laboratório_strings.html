@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Exercícios de Texto com JavaScript</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        section { margin-bottom: 30px; }
+        input, textarea { width: 100%; margin-top: 5px; padding: 8px; }
+        button { margin-top: 10px; padding: 8px 12px; }
+        .fraca { color: red; }
+        .moderada { color: orange; }
+        .forte { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Exercícios de Texto em JavaScript</h1>
+
+    <section>
+        <h2>1. Inverter Frase</h2>
+        <input id="frase1" placeholder="Digite uma frase...">
+        <button onclick="resultado1.innerText = inverterFrase(frase1.value)">Inverter</button>
+        <p id="resultado1"></p>
+    </section>
+
+    <section>
+        <h2>2. Marcar Vogais em Negrito</h2>
+        <input id="frase2" placeholder="Digite uma frase...">
+        <button onclick="resultado2.innerHTML = marcarVogais(frase2.value)">Marcar Vogais</button>
+        <p id="resultado2"></p>
+    </section>
+
+    <section>
+        <h2>3. Contar Palavras</h2>
+        <textarea id="texto3" rows="4" placeholder="Digite um texto..."></textarea>
+        <button onclick="console.table(contarPalavras(texto3.value))">Contar (veja o console)</button>
+    </section>
+
+    <section>
+        <h2>4. Estatísticas do Texto</h2>
+        <textarea id="texto4" rows="4" placeholder="Digite um texto..."></textarea>
+        <button onclick="estat = estatisticasTexto(texto4.value); resultado4.innerText = JSON.stringify(estat, null, 2)">Ver Estatísticas</button>
+        <pre id="resultado4"></pre>
+    </section>
+
+    <section>
+        <h2>5. Substituir Texto</h2>
+        <textarea id="texto5" rows="2" placeholder="Texto original..."></textarea>
+        <input id="procurar5" placeholder="Procurar...">
+        <input id="substituir5" placeholder="Substituir por...">
+        <button onclick="resultado5.innerText = substituirTexto(texto5.value, procurar5.value, substituir5.value)">Substituir</button>
+        <p id="resultado5"></p>
+    </section>
+
+    <section>
+        <h2>6. Data por Extenso</h2>
+        <input id="data6" placeholder="dd/mm/aaaa">
+        <button onclick="resultado6.innerText = dataPorExtenso(data6.value)">Converter</button>
+        <p id="resultado6"></p>
+    </section>
+
+    <section>
+        <h2>7. Classificador de Senha</h2>
+        <input id="senha7" placeholder="Digite a senha...">
+        <button onclick="classificarSenha7()">Classificar</button>
+        <p id="resultado7"></p>
+    </section>
+
+    <section>
+        <h2>8. Codificar TENIS/POLAR</h2>
+        <input id="frase8" placeholder="Digite uma frase...">
+        <button onclick="resultado8.innerText = codificarTenisPolar(frase8.value)">Codificar</button>
+        <p id="resultado8"></p>
+    </section>
+
+    <section>
+        <h2>9. Dias de Vida</h2>
+        <input id="data9" placeholder="dd/mm/aaaa">
+        <button onclick="resultado9.innerText = diasDeVida(data9.value) + ' dias de vida'">Calcular</button>
+        <p id="resultado9"></p>
+    </section>
+
+    <section>
+        <h2>10. Diferença em Semanas</h2>
+        <input id="data10a" placeholder="Data 1 (dd/mm/aaaa)">
+        <input id="data10b" placeholder="Data 2 (dd/mm/aaaa)">
+        <button onclick="resultado10.innerText = semanasEntreDatas(data10a.value, data10b.value) + ' semanas'">Calcular</button>
+        <p id="resultado10"></p>
+    </section>
+
+    <script>
+function inverterFrase(frase) {
+    return frase.split('').reverse().join('');
+}
+
+function marcarVogais(frase) {
+    return frase.replace(/[aeiouAEIOU]/g, (v) => `<b>${v}</b>`);
+}
+
+function contarPalavras(texto) {
+    const palavras = texto.toLowerCase().match(/\w+/g);
+    const contagem = {};
+    palavras.forEach(palavra => {
+        contagem[palavra] = (contagem[palavra] || 0) + 1;
+    });
+    console.table(contagem);
+    return contagem;
+}
+
+function estatisticasTexto(texto) {
+    const palavras = texto.toLowerCase().match(/\w+/g);
+    const totalPalavras = palavras.length;
+    const totalLetras = palavras.join('').length;
+    const contagem = {};
+    palavras.forEach(p => contagem[p] = (contagem[p] || 0) + 1);
+    const maisFrequente = Object.entries(contagem).reduce((a, b) => b[1] > a[1] ? b : a);
+    return {
+        palavraMaisFrequente: maisFrequente[0],
+        ocorrencias: maisFrequente[1],
+        totalPalavras,
+        totalLetras
+    };
+}
+
+function substituirTexto(texto, procurar, substituir) {
+    const regex = new RegExp(procurar, 'g');
+    return texto.replace(regex, substituir);
+}
+
+function dataPorExtenso(dataStr) {
+    const [dia, mes, ano] = dataStr.split('/');
+    const meses = ["janeiro", "fevereiro", "março", "abril", "maio", "junho",
+                   "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"];
+    return `${dia} de ${meses[parseInt(mes)-1]} de ${ano}`;
+}
+
+function classificarSenha(senha) {
+    const fraca = /^[a-z]+$|^[A-Z]+$/;
+    const moderada = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]+$/;
+    const forte = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#!$%&*()\-+.=])[a-zA-Z\d@#!$%&*()\-+.=]+$/;
+    if (forte.test(senha)) return 'forte';
+    else if (moderada.test(senha)) return 'moderada';
+    else if (fraca.test(senha)) return 'fraca';
+    else return 'indefinida';
+}
+
+function codificarTenisPolar(frase) {
+    const mapa = {'T':'P','P':'T','E':'O','O':'E','N':'L','L':'N','I':'A','A':'I','S':'R','R':'S',
+                  't':'p','p':'t','e':'o','o':'e','n':'l','l':'n','i':'a','a':'i','s':'r','r':'s'};
+    return frase.split('').map(l => mapa[l] || l).join('');
+}
+function diasDeVida(dataNascimentoStr) {
+    const hoje = new Date();
+    const [dia, mes, ano] = dataNascimentoStr.split('/');
+    const nascimento = new Date(ano, mes - 1, dia);
+    const diff = hoje - nascimento;
+    return Math.floor(diff / (1000 * 60 * 60 * 24));
+}
+
+function semanasEntreDatas(data1Str, data2Str) {
+    const [d1, m1, a1] = data1Str.split('/');
+    const [d2, m2, a2] = data2Str.split('/');
+    const data1 = new Date(a1, m1 - 1, d1);
+    const data2 = new Date(a2, m2 - 1, d2);
+    const diff = Math.abs(data2 - data1);
+    return Math.floor(diff / (1000 * 60 * 60 * 24 * 7));
+}
+
+    function classificarSenha7() {
+        const senha = document.getElementById('senha7').value;
+        const nivel = classificarSenha(senha);
+        const resultado = document.getElementById('resultado7');
+        resultado.innerText = nivel;
+        resultado.className = nivel;
+    }
+    </script>
+</body>
+</html>
