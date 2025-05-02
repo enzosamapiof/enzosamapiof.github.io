@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Atividades com Arrays</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        section { margin-bottom: 30px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px #ccc; }
+        h2 { color: #333; }
+        input { margin: 5px; padding: 5px; width: 80px; }
+        button { padding: 6px 12px; }
+        pre { background: #eee; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+
+<h1>Exercícios com Arrays e Funções</h1>
+
+<section>
+    <h2>1. Funções Numéricas</h2>
+    <input id="arr1" placeholder="Ex: 1,2,3">
+    <button onclick="testarFuncoesNumericas()">Calcular</button>
+    <pre id="out1"></pre>
+</section>
+
+<section>
+    <h2>2. Números Primos</h2>
+    <input id="primosA" placeholder="Ex: 4 ou 2">
+    <input id="primosB" placeholder="opcional: 10">
+    <button onclick="testarPrimos()">Gerar</button>
+    <pre id="out2"></pre>
+</section>
+
+<section>
+    <h2>3. Números Romanos</h2>
+    <input id="romano" placeholder="Ex: 575">
+    <button onclick="converterRomano()">Converter</button>
+    <pre id="out3"></pre>
+</section>
+
+<section>
+    <h2>4. Saque Mínimo</h2>
+    <input id="valorSaque" placeholder="Ex: 1280">
+    <button onclick="calcularSaque()">Calcular</button>
+    <pre id="out4"></pre>
+</section>
+
+<script>
+
+function sum(arr) {
+    return arr.reduce((acc, val) => acc + val, 0);
+}
+function sumOdds(arr) {
+    return arr.filter(n => n % 2 !== 0).reduce((acc, val) => acc + val, 0);
+}
+function product(arr) {
+    return arr.reduce((acc, val) => acc * val, 1);
+}
+function testarFuncoesNumericas() {
+    const entrada = document.getElementById("arr1").value;
+    const array = entrada.split(",").map(Number);
+    const resultado = `
+Soma: ${sum(array)}
+Soma dos ímpares: ${sumOdds(array)}
+Produto: ${product(array)}
+    `;
+    document.getElementById("out1").textContent = resultado;
+}
+
+function isPrimo(n) {
+    if (n < 2) return false;
+    for (let i = 2; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) return false;
+    }
+    return true;
+}
+function primos(n1, n2) {
+    const resultado = [];
+    if (n2 === undefined || isNaN(n2)) {
+        let num = 2;
+        while (resultado.length < n1) {
+            if (isPrimo(num)) resultado.push(num);
+            num++;
+        }
+    } else {
+        const inicio = Math.min(n1, n2);
+        const fim = Math.max(n1, n2);
+        for (let i = inicio; i <= fim; i++) {
+            if (isPrimo(i)) resultado.push(i);
+        }
+    }
+    return resultado;
+}
+function testarPrimos() {
+    const a = parseInt(document.getElementById("primosA").value);
+    const b = parseInt(document.getElementById("primosB").value);
+    const resultado = primos(a, isNaN(b) ? undefined : b);
+    document.getElementById("out2").textContent = `Primos: ${resultado.join(", ")}`;
+}
+
+function decimalParaRomano(num) {
+    const valores = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
+    const romanos = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"];
+    let resultado = "";
+    for (let i = 0; i < valores.length; i++) {
+        while (num >= valores[i]) {
+            resultado += romanos[i];
+            num -= valores[i];
+        }
+    }
+    return resultado;
+}
+function converterRomano() {
+    const numero = parseInt(document.getElementById("romano").value);
+    if (!isNaN(numero)) {
+        const resultado = decimalParaRomano(numero);
+        document.getElementById("out3").textContent = `Romano: ${resultado}`;
+    }
+}
+
+function saqueMinimo(valor) {
+    const cedulas = [100, 50, 20, 10, 5, 2];
+    const resultado = {};
+    for (let cedula of cedulas) {
+        const qtd = Math.floor(valor / cedula);
+        if (qtd > 0) {
+            resultado[cedula] = qtd;
+            valor %= cedula;
+        }
+    }
+    return resultado;
+}
+function calcularSaque() {
+    const valor = parseInt(document.getElementById("valorSaque").value);
+    const resultado = saqueMinimo(valor);
+    let texto = "Notas:\n";
+    for (let nota in resultado) {
+        texto += `R$${nota}: ${resultado[nota]} nota(s)\n`;
+    }
+    document.getElementById("out4").textContent = texto;
+}
+</script>
+</body>
+</html>
