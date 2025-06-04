@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo da Velha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+      padding-top: 50px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .tabuleiro {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 5px;
+      justify-content: center;
+      margin: 0 auto;
+    }
+    .celula {
+      background-color: #fff;
+      font-size: 2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border: 2px solid #333;
+    }
+    .celula:hover {
+      background-color: #e0e0e0;
+    }
+    #mensagem {
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+    button {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo da Velha</h1>
+  <div class="tabuleiro" id="tabuleiro"></div>
+  <div id="mensagem"></div>
+  <button onclick="reiniciar()">Reiniciar</button>
+
+  <script>
+    const tabuleiro = document.getElementById("tabuleiro");
+    const mensagem = document.getElementById("mensagem");
+    let jogadorAtual = "X";
+    let jogoAtivo = true;
+    let estado = ["", "", "", "", "", "", "", "", ""];
+
+    function verificarVencedor() {
+      const combinacoes = [
+        [0,1,2], [3,4,5], [6,7,8],
+        [0,3,6], [1,4,7], [2,5,8],
+        [0,4,8], [2,4,6]
+      ];
+      for (let combinacao of combinacoes) {
+        const [a, b, c] = combinacao;
+        if (estado[a] && estado[a] === estado[b] && estado[a] === estado[c]) {
+          jogoAtivo = false;
+          return estado[a];
+        }
+      }
+      if (!estado.includes("")) {
+        jogoAtivo = false;
+        return "Empate";
+      }
+      return null;
+    }
+
+    function jogar(index) {
+      if (!jogoAtivo || estado[index]) return;
+      estado[index] = jogadorAtual;
+      atualizarTabuleiro();
+      const vencedor = verificarVencedor();
+      if (vencedor) {
+        mensagem.textContent = vencedor === "Empate" ? "Empate!" : `${vencedor} venceu!`;
+      } else {
+        jogadorAtual = jogadorAtual === "X" ? "O" : "X";
+      }
+    }
+
+    function atualizarTabuleiro() {
+      tabuleiro.innerHTML = "";
+      estado.forEach((valor, index) => {
+        const celula = document.createElement("div");
+        celula.classList.add("celula");
+        celula.textContent = valor;
+        celula.onclick = () => jogar(index);
+        tabuleiro.appendChild(celula);
+      });
+    }
+
+    function reiniciar() {
+      jogadorAtual = "X";
+      jogoAtivo = true;
+      estado = ["", "", "", "", "", "", "", "", ""];
+      mensagem.textContent = "";
+      atualizarTabuleiro();
+    }
+
+    atualizarTabuleiro();
+  </script>
+</body>
+</html>

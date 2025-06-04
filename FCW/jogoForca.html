@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Jogo da Forca</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        #palavra {
+            font-size: 2em;
+            letter-spacing: 10px;
+            margin: 20px;
+        }
+        #letrasErradas {
+            color: red;
+            margin: 10px 0;
+        }
+        #entrada {
+            margin: 10px;
+        }
+        input[type="text"] {
+            width: 30px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+        #mensagem {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Forca</h1>
+    <div id="palavra"></div>
+    <div>Erros: <span id="letrasErradas"></span></div>
+    <div id="entrada">
+        <input type="text" id="letra" maxlength="1">
+        <button onclick="jogar()">Jogar</button>
+    </div>
+    <div id="mensagem"></div>
+
+    <script>
+       const palavras = [
+  "madonna", "britney", "beyonce", "rihanna", "ladygaga", "katyperry", "arianagrande", "taylorswift", "selenagomez", "mileycyrus",
+  "shakira", "dua", "camila", "demi", "kesha", "elliegoulding", "lizzo", "sabrinacarpenter", "oliviarodrigo", "bebe",
+  "normani", "dojacat", "billie", "avril", "anitta", "rosalia", "alessiacara", "zara", "karolg", "tovelo",
+  "halsey", "grimes", "melanie", "ritaora", "ellie", "fletcher", "anne", "lauren", "beckyg", "tinashe",
+  "jlo", "marina", "nina", "sza", "jojo", "mabel", "ashnikko", "charli", "dove", "victoria"
+];
+        const palavraSecreta = palavras[Math.floor(Math.random() * palavras.length)];
+        let palavraAtual = Array(palavraSecreta.length).fill("_");
+        let letrasErradas = [];
+        let tentativasRestantes = 6;
+
+        function atualizarTela() {
+            document.getElementById("palavra").textContent = palavraAtual.join(" ");
+            document.getElementById("letrasErradas").textContent = letrasErradas.join(", ");
+        }
+
+        function jogar() {
+            const input = document.getElementById("letra");
+            const letra = input.value.toLowerCase();
+            input.value = "";
+            input.focus();
+
+            if (!letra || letra.length !== 1 || !letra.match(/[a-zÀ-ÿ]/i)) return;
+            if (palavraAtual.includes(letra) || letrasErradas.includes(letra)) return;
+
+            if (palavraSecreta.includes(letra)) {
+                for (let i = 0; i < palavraSecreta.length; i++) {
+                    if (palavraSecreta[i] === letra) {
+                        palavraAtual[i] = letra;
+                    }
+                }
+            } else {
+                letrasErradas.push(letra);
+                tentativasRestantes--;
+            }
+
+            atualizarTela();
+            verificarFimDeJogo();
+        }
+
+        function verificarFimDeJogo() {
+            const mensagem = document.getElementById("mensagem");
+            if (!palavraAtual.includes("_")) {
+                mensagem.textContent = "Parabéns! Você venceu!";
+                document.getElementById("entrada").style.display = "none";
+            } else if (tentativasRestantes === 0) {
+                mensagem.textContent = `Você perdeu! A palavra era: ${palavraSecreta}`;
+                document.getElementById("entrada").style.display = "none";
+            }
+        }
+
+        atualizarTela();
+    </script>
+</body>
+</html>
